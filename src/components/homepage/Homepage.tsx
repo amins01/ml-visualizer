@@ -17,19 +17,22 @@ import FormControl from "@mui/material/FormControl"
 import FormLabel from "@mui/material/FormLabel"
 import { TrainingSize } from "../../interfaces/TrainingSize"
 import Switch from "@mui/material/Switch"
+import Slider from "@mui/material/Slider"
 import CostFunctionLandscapeChart from "../cost-function-landscape-chart/CostFunctionLandscapeChart"
 import { CustomLine } from "../../interfaces/CustomLine"
 
 function Homepage() {
   const MIN_RANGE = 1
   const MAX_RANGE = 10
-  const [learningRate, setLearningRate] = useState<number>(0.01)
+  const STOCHASTIC = 1
+  const MINI_BATCH = 32
+  const [learningRate, setLearningRate] = useState<number>(0.001)
   const [model, setModel] = useState(new LinearRegression(learningRate))
   const [trainingSize, setTrainingSize] = useState<TrainingSize>(
     TrainingSize.SMALL
   )
   const [isTraining, setIsTraining] = useState(false)
-  const [linearPattern, setLinearPattern] = useState(false)
+  const [linearPattern, setLinearPattern] = useState(true)
   const [pointsData, setPointsData] = useState<Point2D[]>(
     HelperUtils.generateRandomPoints(
       trainingSize,
@@ -40,10 +43,16 @@ function Homepage() {
   )
   const [OLSLine, setOLSLine] = useState<CustomLine>()
   const [OLSPointsData, setOLSPointsData] = useState<Point2D[]>([])
+  const [batchSizeMarkIndex, setBatchSizeMarkIndex] = useState(3)
 
   const startTraining = () => {
     setIsTraining(true)
-    model.train(pointsData, 10000, 0)
+    model.train(
+      pointsData,
+      10000,
+      getBatchSizeByMarkIndex(batchSizeMarkIndex),
+      0
+    )
   }
 
   const resetTraining = () => {
@@ -62,6 +71,27 @@ function Homepage() {
         linearPattern
       )
     )
+  }
+
+  const handleSliderChange = (event: any, newValue: any) => {
+    const newBatchSize = getBatchSizeByMarkIndex(newValue)
+
+    if (newBatchSize !== -1 && newValue !== batchSizeMarkIndex) {
+      console.log(
+        `old: ${getBatchSizeByMarkIndex(
+          batchSizeMarkIndex
+        )}, new: ${newBatchSize}`
+      )
+      setBatchSizeMarkIndex(newValue)
+    }
+  }
+
+  const getBatchSizeByMarkIndex = (markIndex: number) => {
+    if (markIndex === 1) return STOCHASTIC
+    if (markIndex === 2) return MINI_BATCH
+    if (markIndex === 3) return pointsData.length
+
+    return -1
   }
 
   const handleTrainingSizeChange = (
@@ -173,6 +203,20 @@ function Homepage() {
           />
         </div>
         <div className="loss-chart">
+          <div className="batch-size-slider">
+            <Slider
+              value={batchSizeMarkIndex}
+              onChange={handleSliderChange}
+              min={1}
+              max={3}
+              marks={[
+                { value: 1, label: "Stochastic GD" },
+                { value: 2, label: "Mini-batch GD" },
+                { value: 3, label: "Batch GD" },
+              ]}
+              valueLabelDisplay="auto"
+            />
+          </div>
           <div>
             <LoadingButton
               variant="contained"

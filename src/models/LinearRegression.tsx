@@ -34,33 +34,62 @@ export class LinearRegression {
     this.resetCallbacks.push(cb)
   }
 
-  async train(points: Point2D[], epochs: number, delay: number) {
+  splitArrayIntoBatches(array: Point2D[], batchSize: number) {
+    const resultArray = []
+    for (let i = 0; i < array.length; i += batchSize) {
+      resultArray.push(array.slice(i, i + batchSize))
+    }
+    return resultArray
+  }
+
+  async train(
+    points: Point2D[],
+    epochs: number,
+    batchSize: number,
+    delay: number
+  ) {
     console.log(`Starting Training for ${epochs} epochs...`)
     this.stopTraining = false
+
     for (let epoch = 1; epoch <= epochs; epoch++) {
       if (this.stopTraining) break
-      this.currentEpoch = epoch
-      let delta_slope = 0
-      let delta_intercept = 0
-      for (let i = 0; i < points.length; i++) {
-        const y_hat = this.slope * points[i].x + this.intercept
-        const error = points[i].y - y_hat
-        delta_slope += -2 * error * points[i].x
-        delta_intercept += -2 * error
-      }
-      this.slope -= (this.learningRate * delta_slope) / points.length
-      this.intercept -= (this.learningRate * delta_intercept) / points.length
 
-      this.currentLoss =
-        points.reduce((sum, point) => {
-          const y_hat = this.slope * point.x + this.intercept
-          const error = point.y - y_hat
-          return sum + error ** 2
-        }, 0) / points.length
+      this.currentEpoch = epoch
+      let currentLoss = 0
+      const batches = this.splitArrayIntoBatches(points, batchSize)
+      console.log(batches)
+
+      for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+        const batch = batches[batchIndex]
+        let delta_slope = 0
+        let delta_intercept = 0
+
+        for (let i = 0; i < batch.length; i++) {
+          const y_hat = this.slope * batch[i].x + this.intercept
+          const error = batch[i].y - y_hat
+          delta_slope += -2 * error * batch[i].x
+          delta_intercept += -2 * error
+        }
+
+        this.slope -= (this.learningRate * delta_slope) / batch.length
+        this.intercept -= (this.learningRate * delta_intercept) / batch.length
+
+        currentLoss +=
+          batch.reduce((sum, point) => {
+            const y_hat = this.slope * point.x + this.intercept
+            const error = point.y - y_hat
+            return sum + error ** 2
+          }, 0) / batch.length
+      }
+
+      this.currentLoss = currentLoss / batches.length
+
       console.log(`Slope epoch ${this.currentEpoch}`, this.slope)
       console.log(`Intercept epoch ${this.currentEpoch}`, this.intercept)
       console.log(`Loss epoch ${this.currentEpoch}`, this.currentLoss)
+
       this.notify()
+
       await HelperUtils.sleep(delay)
     }
     this.currentEpoch = 0

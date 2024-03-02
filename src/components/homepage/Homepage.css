@@ -13,3 +13,7 @@
   flex-direction: column;
   align-items: center;
 }
+
+.batch-size-slider {
+  width: 100%;
+}
