@@ -9,6 +9,7 @@ import {
   ComposedChart,
 } from "recharts"
 import { Point2D } from "../../interfaces/Point2D"
+import Theme from "../../utils/Theme"
 
 function LinearModelChart(props: any) {
   const {
@@ -23,19 +24,10 @@ function LinearModelChart(props: any) {
 
   const generateLinePoints = () => {
     const points: Point2D[] = []
-    const xs = pointsData.map((p: Point2D) => p.x)
-    const ys = pointsData.map((p: Point2D) => p.y)
-    const minX = Math.min(...xs),
-      maxX = Math.max(...xs)
-    const minY = Math.min(...ys),
-      maxY = Math.max(...ys)
     for (let i = minRange; i < maxRange; i++) {
-      const x = (i - minX) / (maxX - minX)
-      const y_hat_normalized = model.slope * x + model.intercept
-      const y = y_hat_normalized * (maxY - minY) + minY
       points.push({
         x: i,
-        y: y,
+        y: model.slope * i + model.intercept,
       })
     }
     return points
@@ -48,7 +40,7 @@ function LinearModelChart(props: any) {
   }
 
   useEffect(() => {
-    if (pointsData && pointsData.length == 0) return
+    if (pointsData && pointsData.length === 0) return
     model.subscribeUpdate(updateLinePoints)
     model.subscribeReset(updateLinePoints)
   }, [])
@@ -63,14 +55,15 @@ function LinearModelChart(props: any) {
         <CartesianGrid />
         <XAxis type="number" dataKey="x" name="x" />
         <YAxis type="number" dataKey="y" name="y" />
-        <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+        {/* <Tooltip cursor={{ strokeDasharray: "3 3" }} /> */}
         {/* <Legend /> */}
         <Scatter name="points" data={pointsData} fill="#8884d8" />
         <Line
           type="monotone"
           dataKey="y"
           data={linePoints}
-          stroke="#ff7300"
+          stroke={Theme.colors.secondary}
+          strokeWidth={2}
           dot={false}
           activeDot={false}
         />
@@ -78,7 +71,8 @@ function LinearModelChart(props: any) {
           type="monotone"
           dataKey="y"
           data={OLSpointsData}
-          stroke="#FF0000"
+          stroke={Theme.colors.primary}
+          strokeWidth={2}
           dot={false}
           activeDot={false}
         />

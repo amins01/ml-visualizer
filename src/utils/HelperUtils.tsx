@@ -12,7 +12,7 @@ export default class HelperUtils {
     for (let i = 0; i < quantity; i++) {
       const x = Math.random() * (max - min) + min
       const y = linearPattern
-        ? x + Math.random() * 30
+        ? x + Math.random() * 2
         : Math.random() * (max - min) + min
 
       points.push({

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { CartesianGrid, XAxis, YAxis, Line, ComposedChart } from "recharts"
 import { Point2D } from "../../interfaces/Point2D"
+import Theme from "../../utils/Theme"
 
 function LossChart(props: any) {
   const { height, width, model } = props
@@ -32,7 +33,8 @@ function LossChart(props: any) {
           type="monotone"
           dataKey="y"
           data={loss}
-          stroke="#ff7300"
+          stroke={Theme.colors.secondary}
+          strokeWidth={2}
           dot={false}
           activeDot={false}
         />

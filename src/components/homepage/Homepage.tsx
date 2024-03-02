@@ -17,11 +17,13 @@ import FormControl from "@mui/material/FormControl"
 import FormLabel from "@mui/material/FormLabel"
 import { TrainingSize } from "../../interfaces/TrainingSize"
 import Switch from "@mui/material/Switch"
+import CostFunctionLandscapeChart from "../cost-function-landscape-chart/CostFunctionLandscapeChart"
+import { CustomLine } from "../../interfaces/CustomLine"
 
 function Homepage() {
-  const MIN_RANGE = 50
-  const MAX_RANGE = 150
-  const [learningRate, setLearningRate] = useState<number>(0.5)
+  const MIN_RANGE = 1
+  const MAX_RANGE = 10
+  const [learningRate, setLearningRate] = useState<number>(0.01)
   const [model, setModel] = useState(new LinearRegression(learningRate))
   const [trainingSize, setTrainingSize] = useState<TrainingSize>(
     TrainingSize.SMALL
@@ -36,7 +38,8 @@ function Homepage() {
       linearPattern
     )
   )
-  const [OLSpointsData, setOLSPointsData] = useState<Point2D[]>([])
+  const [OLSLine, setOLSLine] = useState<CustomLine>()
+  const [OLSPointsData, setOLSPointsData] = useState<Point2D[]>([])
 
   const startTraining = () => {
     setIsTraining(true)
@@ -71,23 +74,31 @@ function Homepage() {
     setTrainingSize(selectedValue)
   }
 
-  const generateOLSpoints = () => {
-    const { slope, intercept } = HelperUtils.generateOLSParams(pointsData)
-    return HelperUtils.generatePointsFromParams(
-      MIN_RANGE,
-      MAX_RANGE,
-      slope,
-      intercept
-    )
-  }
-
   useEffect(() => {
     generateDataset()
   }, [trainingSize, linearPattern])
 
   useEffect(() => {
-    setOLSPointsData(generateOLSpoints())
+    const { slope, intercept } = HelperUtils.generateOLSParams(pointsData)
+
+    setOLSLine({
+      slope: slope,
+      intercept: intercept,
+    })
   }, [pointsData])
+
+  useEffect(() => {
+    if (!OLSLine) return
+
+    setOLSPointsData(
+      HelperUtils.generatePointsFromParams(
+        MIN_RANGE,
+        MAX_RANGE,
+        OLSLine.slope,
+        OLSLine.intercept
+      )
+    )
+  }, [OLSLine])
 
   return (
     <>
@@ -150,7 +161,15 @@ function Homepage() {
             maxRange={MAX_RANGE}
             model={model}
             pointsData={pointsData}
-            OLSpointsData={OLSpointsData}
+            OLSpointsData={OLSPointsData}
+          />
+        </div>
+        <div className="cost-landscape-chart">
+          <CostFunctionLandscapeChart
+            width={400}
+            height={400}
+            OLSLine={OLSLine}
+            model={model}
           />
         </div>
         <div className="loss-chart">

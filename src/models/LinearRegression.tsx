@@ -37,28 +37,28 @@ export class LinearRegression {
   async train(points: Point2D[], epochs: number, delay: number) {
     console.log(`Starting Training for ${epochs} epochs...`)
     this.stopTraining = false
-    const normalizedPoints = HelperUtils.getNormalizedPoints(points)
     for (let epoch = 1; epoch <= epochs; epoch++) {
       if (this.stopTraining) break
       this.currentEpoch = epoch
       let delta_slope = 0
       let delta_intercept = 0
-      for (let i = 0; i < normalizedPoints.length; i++) {
-        const y_hat = this.slope * normalizedPoints[i].x + this.intercept
-        const error = normalizedPoints[i].y - y_hat
-        delta_slope += -2 * error * normalizedPoints[i].x
+      for (let i = 0; i < points.length; i++) {
+        const y_hat = this.slope * points[i].x + this.intercept
+        const error = points[i].y - y_hat
+        delta_slope += -2 * error * points[i].x
         delta_intercept += -2 * error
       }
-      this.slope -= (this.learningRate * delta_slope) / normalizedPoints.length
-      this.intercept -=
-        (this.learningRate * delta_intercept) / normalizedPoints.length
+      this.slope -= (this.learningRate * delta_slope) / points.length
+      this.intercept -= (this.learningRate * delta_intercept) / points.length
 
       this.currentLoss =
-        normalizedPoints.reduce((sum, point) => {
+        points.reduce((sum, point) => {
           const y_hat = this.slope * point.x + this.intercept
           const error = point.y - y_hat
           return sum + error ** 2
-        }, 0) / normalizedPoints.length
+        }, 0) / points.length
+      console.log(`Slope epoch ${this.currentEpoch}`, this.slope)
+      console.log(`Intercept epoch ${this.currentEpoch}`, this.intercept)
       console.log(`Loss epoch ${this.currentEpoch}`, this.currentLoss)
       this.notify()
       await HelperUtils.sleep(delay)
