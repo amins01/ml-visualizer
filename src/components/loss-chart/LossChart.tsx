@@ -8,9 +8,11 @@ function LossChart(props: any) {
   const [loss, setLoss] = useState<Point2D[]>([])
 
   const updateLossCurve = () => {
+    if (model.currentLoss === 0) return
+
     setLoss((prevLoss) => [
       ...prevLoss,
-      { x: model.currentEpoch, y: Math.abs(model.currentLoss) },
+      { x: model.currentStep, y: Math.abs(model.currentLoss) },
     ])
   }
 
@@ -22,8 +24,8 @@ function LossChart(props: any) {
   return (
     <div>
       <ComposedChart
-        width={height}
-        height={width}
+        width={width}
+        height={height}
         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
       >
         <CartesianGrid />

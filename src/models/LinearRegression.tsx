@@ -10,6 +10,7 @@ export class LinearRegression {
   intercept: number
   currentLoss: number
   currentEpoch: number
+  currentStep: number
   learningRate: number
   stopTraining: boolean
 
@@ -22,6 +23,7 @@ export class LinearRegression {
     this.initialIntercept = this.intercept
     this.currentLoss = 0
     this.currentEpoch = 0
+    this.currentStep = 0
     this.learningRate = learningRate
     this.stopTraining = false
   }
@@ -55,9 +57,7 @@ export class LinearRegression {
       if (this.stopTraining) break
 
       this.currentEpoch = epoch
-      let currentLoss = 0
       const batches = this.splitArrayIntoBatches(points, batchSize)
-      console.log(batches)
 
       for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
         const batch = batches[batchIndex]
@@ -74,27 +74,37 @@ export class LinearRegression {
         this.slope -= (this.learningRate * delta_slope) / batch.length
         this.intercept -= (this.learningRate * delta_intercept) / batch.length
 
-        currentLoss +=
+        this.currentLoss =
           batch.reduce((sum, point) => {
             const y_hat = this.slope * point.x + this.intercept
             const error = point.y - y_hat
             return sum + error ** 2
           }, 0) / batch.length
+
+        //console.log(`Loss ${this.currentEpoch}-${batchIndex}`, this.currentLoss)
+        this.currentStep++
+        this.notify()
+        await HelperUtils.sleep(delay)
       }
 
-      this.currentLoss = currentLoss / batches.length
+      //this.currentLoss = currentLoss / batches.length
 
-      console.log(`Slope epoch ${this.currentEpoch}`, this.slope)
-      console.log(`Intercept epoch ${this.currentEpoch}`, this.intercept)
+      // console.log(`Slope epoch ${this.currentEpoch}`, this.slope)
+      // console.log(`Intercept epoch ${this.currentEpoch}`, this.intercept)
       console.log(`Loss epoch ${this.currentEpoch}`, this.currentLoss)
-
-      this.notify()
-
-      await HelperUtils.sleep(delay)
     }
     this.currentEpoch = 0
+    this.currentStep = 0
     this.currentLoss = 0
     this.stopTraining = false
+  }
+
+  updateParams(slope: number, intercept: number) {
+    this.slope = slope
+    this.intercept = intercept
+    this.initialSlope = this.slope
+    this.initialIntercept = this.intercept
+    this.updateCallbacks.forEach((callback) => callback())
   }
 
   resetParams() {
@@ -105,16 +115,27 @@ export class LinearRegression {
     this.resetCallbacks.forEach((callback) => callback())
   }
 
-  reset() {
+  stop() {
+    this.stopTraining = true
+    this.currentLoss = 0
+    this.currentEpoch = 0
+    this.currentStep = 0
+    this.resetCallbacks.forEach((callback) => callback())
+  }
+
+  async reset() {
     this.stopTraining = true
     this.slope = this.initialSlope
     this.intercept = this.initialIntercept
     this.currentLoss = 0
     this.currentEpoch = 0
+    this.currentStep = 0
     this.resetCallbacks.forEach((callback) => callback())
   }
 
   notify() {
+    if (this.stopTraining) return
+
     this.updateCallbacks.forEach((callback) => callback())
   }
 }

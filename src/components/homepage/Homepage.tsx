@@ -26,7 +26,7 @@ function Homepage() {
   const MAX_RANGE = 10
   const STOCHASTIC = 1
   const MINI_BATCH = 32
-  const [learningRate, setLearningRate] = useState<number>(0.001)
+  const [learningRate, setLearningRate] = useState<number>(0.01)
   const [model, setModel] = useState(new LinearRegression(learningRate))
   const [trainingSize, setTrainingSize] = useState<TrainingSize>(
     TrainingSize.SMALL
@@ -77,11 +77,8 @@ function Homepage() {
     const newBatchSize = getBatchSizeByMarkIndex(newValue)
 
     if (newBatchSize !== -1 && newValue !== batchSizeMarkIndex) {
-      console.log(
-        `old: ${getBatchSizeByMarkIndex(
-          batchSizeMarkIndex
-        )}, new: ${newBatchSize}`
-      )
+      resetTraining()
+      model.resetParams()
       setBatchSizeMarkIndex(newValue)
     }
   }
@@ -200,6 +197,8 @@ function Homepage() {
             height={400}
             OLSLine={OLSLine}
             model={model}
+            isTraining={isTraining}
+            setIsTraining={setIsTraining}
           />
         </div>
         <div className="loss-chart">
@@ -230,7 +229,7 @@ function Homepage() {
               <RestartAltIcon fontSize="small" />
             </IconButton>
           </div>
-          <LossChart width={400} height={400} model={model} />
+          <LossChart width={400} height={200} model={model} />
         </div>
       </div>
     </>
