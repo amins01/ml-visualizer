@@ -1,3 +1,4 @@
+import { CustomLine } from "../interfaces/CustomLine"
 import { Point2D } from "../interfaces/Point2D"
 
 export default class HelperUtils {
@@ -12,8 +13,10 @@ export default class HelperUtils {
     for (let i = 0; i < quantity; i++) {
       const x = Math.random() * (max - min) + min
       const y = linearPattern
-        ? x + Math.random() * 2
+        ? x + Math.random() * 5 * (Math.random() < 0.5 ? -1 : 1)
         : Math.random() * (max - min) + min
+
+      if (y < min || y > max) continue
 
       points.push({
         x: x,
@@ -22,6 +25,16 @@ export default class HelperUtils {
     }
 
     return points
+  }
+
+  static getMSE(truth: Point2D[], pred: CustomLine) {
+    return (
+      truth.reduce((sum, point) => {
+        const y_hat = pred.slope * point.x + pred.intercept
+        const error = point.y - y_hat
+        return sum + error ** 2
+      }, 0) / truth.length
+    )
   }
 
   static generateOLSParams(points: Point2D[]) {

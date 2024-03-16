@@ -23,16 +23,15 @@ function CostFunctionLandscapeChart(props: any) {
         y: model.slope,
       },
       1,
-      8,
+      3,
       1,
-      8,
+      3,
       width
     )
 
     if (!model.stopTraining) {
       setModelPath((prevPath) => [...prevPath, newPoint])
     } else if (model.stopTraining) {
-      console.log("MODELLL POINTTT")
       setModelPath([newPoint])
       setModelPoint(newPoint)
     }
@@ -52,9 +51,9 @@ function CostFunctionLandscapeChart(props: any) {
           y: OLSLine.slope,
         },
         1,
-        8,
+        3,
         1,
-        8,
+        3,
         width
       )
     )
@@ -70,9 +69,9 @@ function CostFunctionLandscapeChart(props: any) {
     const newDenormalizedPoint = denormalizePoint(
       newNormalizedPoint,
       1,
-      8,
+      3,
       1,
-      8,
+      3,
       width
     )
     model.updateParams(newDenormalizedPoint.y, newDenormalizedPoint.x)
@@ -131,11 +130,11 @@ function CostFunctionLandscapeChart(props: any) {
           >
             <stop
               offset="0%"
-              style={{ stopColor: "#D6BBC0", stopOpacity: 1 }}
+              style={{ stopColor: "#AF42AE", stopOpacity: 0.2 }}
             />
             <stop
               offset="25%"
-              style={{ stopColor: "#D0A3BF", stopOpacity: 0.8 }}
+              style={{ stopColor: "#BC69AA", stopOpacity: 0.4 }}
             />
             <stop
               offset="50%"
@@ -143,11 +142,11 @@ function CostFunctionLandscapeChart(props: any) {
             />
             <stop
               offset="75%"
-              style={{ stopColor: "#BC69AA", stopOpacity: 0.4 }}
+              style={{ stopColor: "#D0A3BF", stopOpacity: 0.8 }}
             />
             <stop
               offset="100%"
-              style={{ stopColor: "#AF42AE", stopOpacity: 0.2 }}
+              style={{ stopColor: "#d58eba", stopOpacity: 0.9 }}
             />
           </radialGradient>
         </defs>
@@ -220,6 +219,17 @@ function CostFunctionLandscapeChart(props: any) {
           strokeWidth={1}
           fill="none"
         />
+        <text x={width / 2} y={height - 10} textAnchor="middle">
+          intercept
+        </text>
+        <text
+          x={10}
+          y={height / 2}
+          textAnchor="middle"
+          transform={`rotate(-90,10,${height / 2})`}
+        >
+          slope
+        </text>
       </svg>
     </div>
   )

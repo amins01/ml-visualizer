@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useSyncExternalStore } from "react"
+import React, { useEffect, useState } from "react"
 import LinearModelChart from "../linear-model-chart/LinearModelChart"
 import { LinearRegression } from "../../models/LinearRegression"
 import LossChart from "../loss-chart/LossChart"
-import Button from "@mui/material/Button"
 import AutoGraphIcon from "@mui/icons-material/AutoGraph"
 import "./Homepage.css"
 import { Point2D } from "../../interfaces/Point2D"
@@ -20,13 +19,14 @@ import Switch from "@mui/material/Switch"
 import Slider from "@mui/material/Slider"
 import CostFunctionLandscapeChart from "../cost-function-landscape-chart/CostFunctionLandscapeChart"
 import { CustomLine } from "../../interfaces/CustomLine"
+import InfoCard from "../info-card/InfoCard"
 
 function Homepage() {
-  const MIN_RANGE = 1
+  const MIN_RANGE = -10
   const MAX_RANGE = 10
   const STOCHASTIC = 1
   const MINI_BATCH = 32
-  const [learningRate, setLearningRate] = useState<number>(0.01)
+  const [learningRate, setLearningRate] = useState<number>(0.001)
   const [model, setModel] = useState(new LinearRegression(learningRate))
   const [trainingSize, setTrainingSize] = useState<TrainingSize>(
     TrainingSize.SMALL
@@ -78,7 +78,6 @@ function Homepage() {
 
     if (newBatchSize !== -1 && newValue !== batchSizeMarkIndex) {
       resetTraining()
-      model.resetParams()
       setBatchSizeMarkIndex(newValue)
     }
   }
@@ -132,105 +131,113 @@ function Homepage() {
       <h1>ML Visualizer</h1>
       <div className="row-1">
         <div className="linear-reg-chart">
-          <div>
-            <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Training Size
-              </FormLabel>
-              <RadioGroup
-                row
-                name="row-radio-buttons-group"
-                onChange={handleTrainingSizeChange}
+          <InfoCard title="1. Title" description="Desc" maxWidth={400}>
+            <div>
+              <FormControl>
+                <FormLabel id="training-size-radio-buttons-group-label">
+                  Training Size
+                </FormLabel>
+                <RadioGroup
+                  row
+                  name="row-radio-buttons-group"
+                  onChange={handleTrainingSizeChange}
+                >
+                  <FormControlLabel
+                    value={TrainingSize.SMALL}
+                    control={<Radio />}
+                    label="Small"
+                    checked={trainingSize === TrainingSize.SMALL}
+                  />
+                  <FormControlLabel
+                    value={TrainingSize.MEDIUM}
+                    control={<Radio />}
+                    label="Medium"
+                    checked={trainingSize === TrainingSize.MEDIUM}
+                  />
+                  <FormControlLabel
+                    value={TrainingSize.LARGE}
+                    control={<Radio />}
+                    label="Large"
+                    checked={trainingSize === TrainingSize.LARGE}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <div className="generate-dataset-options">
+              <LoadingButton
+                variant="contained"
+                onClick={() => generateDataset()}
               >
-                <FormControlLabel
-                  value={TrainingSize.SMALL}
-                  control={<Radio />}
-                  label="Small"
-                  checked={trainingSize === TrainingSize.SMALL}
-                />
-                <FormControlLabel
-                  value={TrainingSize.MEDIUM}
-                  control={<Radio />}
-                  label="Medium"
-                  checked={trainingSize === TrainingSize.MEDIUM}
-                />
-                <FormControlLabel
-                  value={TrainingSize.LARGE}
-                  control={<Radio />}
-                  label="Large"
-                  checked={trainingSize === TrainingSize.LARGE}
-                />
-              </RadioGroup>
-            </FormControl>
-          </div>
-          <div>
-            <LoadingButton
-              variant="contained"
-              onClick={() => generateDataset()}
-            >
-              Generate new dataset
-            </LoadingButton>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={linearPattern}
-                  onChange={() => setLinearPattern(!linearPattern)}
-                  name="Linear"
-                />
-              }
-              label="Linear"
+                Generate new dataset
+              </LoadingButton>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={linearPattern}
+                    onChange={() => setLinearPattern(!linearPattern)}
+                    name="Linear"
+                  />
+                }
+                label="Linear"
+              />
+            </div>
+            <LinearModelChart
+              width={350}
+              height={350}
+              minRange={MIN_RANGE}
+              maxRange={MAX_RANGE}
+              model={model}
+              pointsData={pointsData}
+              OLSpointsData={OLSPointsData}
+            />
+          </InfoCard>
+        </div>
+        <InfoCard title="2. Title." description="Desc" maxWidth={400}>
+          <div className="cost-landscape-chart">
+            <CostFunctionLandscapeChart
+              width={350}
+              height={350}
+              OLSLine={OLSLine}
+              model={model}
+              isTraining={isTraining}
+              setIsTraining={setIsTraining}
             />
           </div>
-          <LinearModelChart
-            width={400}
-            height={400}
-            minRange={MIN_RANGE}
-            maxRange={MAX_RANGE}
-            model={model}
-            pointsData={pointsData}
-            OLSpointsData={OLSPointsData}
-          />
-        </div>
-        <div className="cost-landscape-chart">
-          <CostFunctionLandscapeChart
-            width={400}
-            height={400}
-            OLSLine={OLSLine}
-            model={model}
-            isTraining={isTraining}
-            setIsTraining={setIsTraining}
-          />
-        </div>
-        <div className="loss-chart">
-          <div className="batch-size-slider">
-            <Slider
-              value={batchSizeMarkIndex}
-              onChange={handleSliderChange}
-              min={1}
-              max={3}
-              marks={[
-                { value: 1, label: "Stochastic GD" },
-                { value: 2, label: "Mini-batch GD" },
-                { value: 3, label: "Batch GD" },
-              ]}
-              valueLabelDisplay="auto"
-            />
+        </InfoCard>
+        <InfoCard title="3. Title" description="Desc" maxWidth={400}>
+          <div className="loss-card-content">
+            <div className="batch-size-slider">
+              <Slider
+                value={batchSizeMarkIndex}
+                onChange={handleSliderChange}
+                min={1}
+                max={3}
+                marks={[
+                  { value: 1, label: "Stochastic GD" },
+                  { value: 2, label: "Mini-batch GD" },
+                  { value: 3, label: "Batch GD" },
+                ]}
+                valueLabelDisplay="auto"
+              />
+            </div>
+            <div className="training-options">
+              <LoadingButton
+                variant="contained"
+                endIcon={<AutoGraphIcon />}
+                loading={isTraining}
+                onClick={() => startTraining()}
+              >
+                Start Training
+              </LoadingButton>
+              <IconButton size="small" onClick={() => resetTraining()}>
+                <RestartAltIcon fontSize="small" />
+              </IconButton>
+            </div>
+            <div className="loss-chart">
+              <LossChart width={400} height={200} model={model} />
+            </div>
           </div>
-          <div>
-            <LoadingButton
-              variant="contained"
-              endIcon={<AutoGraphIcon />}
-              loading={isTraining}
-              onClick={() => startTraining()}
-            >
-              Start Training
-            </LoadingButton>
-            <IconButton size="small" onClick={() => resetTraining()}>
-              <RestartAltIcon fontSize="small" />
-            </IconButton>
-          </div>
-          <LossChart width={400} height={200} model={model} />
-        </div>
+        </InfoCard>
       </div>
     </>
   )

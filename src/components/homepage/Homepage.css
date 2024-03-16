@@ -1,11 +1,20 @@
 .row-1 {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.loss-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .loss-chart {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  place-self: flex-end;
 }
 
 .linear-reg-chart {
@@ -15,5 +24,17 @@
 }
 
 .batch-size-slider {
-  width: 100%;
+  display: flex;
+  align-self: center;
+  width: 250px;
+}
+
+.generate-dataset-options {
+  display: flex;
+  gap: 1rem;
+}
+
+.training-options {
+  display: flex;
+  justify-content: center;
 }

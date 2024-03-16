@@ -25,10 +25,13 @@ function LinearModelChart(props: any) {
   const generateLinePoints = () => {
     const points: Point2D[] = []
     for (let i = minRange; i < maxRange; i++) {
-      points.push({
-        x: i,
-        y: model.slope * i + model.intercept,
-      })
+      const y = model.slope * i + model.intercept
+      if (y >= minRange * 1.1 && y <= maxRange * 1.1) {
+        points.push({
+          x: i,
+          y: y,
+        })
+      }
     }
     return points
   }
@@ -53,11 +56,36 @@ function LinearModelChart(props: any) {
         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
       >
         <CartesianGrid />
-        <XAxis type="number" dataKey="x" name="x" />
-        <YAxis type="number" dataKey="y" name="y" />
+        <XAxis
+          type="number"
+          dataKey="x"
+          name="x"
+          label={{
+            value: `x`,
+            style: { textAnchor: "middle" },
+            position: "insideBottom",
+            offset: -15,
+          }}
+          tickFormatter={(tick) => Math.round(tick) + ""}
+          domain={[minRange * 1.1, maxRange * 1.1]}
+        />
+        <YAxis
+          type="number"
+          dataKey="y"
+          name="y"
+          label={{
+            value: `y`,
+            style: { textAnchor: "middle" },
+            angle: -90,
+            position: "left",
+            offset: 0,
+          }}
+          tickFormatter={(tick) => Math.round(tick) + ""}
+          domain={[minRange * 1.1, maxRange * 1.1]}
+        />
         {/* <Tooltip cursor={{ strokeDasharray: "3 3" }} /> */}
         {/* <Legend /> */}
-        <Scatter name="points" data={pointsData} fill="#8884d8" />
+        <Scatter name="points" data={pointsData} fill={Theme.colors.options} />
         <Line
           type="monotone"
           dataKey="y"
