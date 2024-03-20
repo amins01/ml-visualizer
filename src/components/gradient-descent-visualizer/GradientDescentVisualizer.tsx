@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react"
+import { InlineMath } from "react-katex"
+import "katex/dist/katex.min.css"
 import LinearModelChart from "../linear-model-chart/LinearModelChart"
 import { LinearRegression } from "../../models/LinearRegression"
 import LossChart from "../loss-chart/LossChart"
 import AutoGraphIcon from "@mui/icons-material/AutoGraph"
-import "./Homepage.css"
+import "./GradientDescentVisualizer.css"
 import { Point2D } from "../../interfaces/Point2D"
 import HelperUtils from "../../utils/HelperUtils"
 import IconButton from "@mui/material/IconButton"
@@ -20,8 +22,9 @@ import Slider from "@mui/material/Slider"
 import CostFunctionLandscapeChart from "../cost-function-landscape-chart/CostFunctionLandscapeChart"
 import { CustomLine } from "../../interfaces/CustomLine"
 import InfoCard from "../info-card/InfoCard"
+import Theme from "../../utils/Theme"
 
-function Homepage() {
+function GradientDescentVisualizer() {
   const MIN_RANGE = -10
   const MAX_RANGE = 10
   const STOCHASTIC = 1
@@ -29,7 +32,7 @@ function Homepage() {
   const [learningRate, setLearningRate] = useState<number>(0.001)
   const [model, setModel] = useState(new LinearRegression(learningRate))
   const [trainingSize, setTrainingSize] = useState<TrainingSize>(
-    TrainingSize.SMALL
+    TrainingSize.LARGE
   )
   const [isTraining, setIsTraining] = useState(false)
   const [linearPattern, setLinearPattern] = useState(true)
@@ -128,10 +131,49 @@ function Homepage() {
 
   return (
     <>
-      <h1>ML Visualizer</h1>
+      <div className="gd-header-wrapper">
+        <div className="gd-title"> 📉 Gradient Descent </div>
+        <div className="gd-subtitle">
+          <InlineMath math="\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta)" />
+        </div>
+        <div className="gd-description">
+          <p>
+            The following is an interactive visualization of linear regression
+            using gradient descent. I saw this interactive animation while
+            navigating
+            <span style={{ fontStyle: "italic" }}>{" deeplearning.ai "}</span>
+            and decided to recreate it!
+          </p>
+        </div>
+      </div>
       <div className="row-1">
         <div className="linear-reg-chart">
-          <InfoCard title="1. Title" description="Desc" maxWidth={400}>
+          <InfoCard
+            title="1. Generate a dataset"
+            description={
+              <>
+                First, select the training size and generate a random dataset.
+                The{" "}
+                <span style={{ color: Theme.colors.primary }}>
+                  Ordinary Least Squares (OLS) line
+                </span>{" "}
+                minimizes the sum of squared residuals, given by the formula:{" "}
+                <InlineMath math="\min_{\beta_0, \beta_1} \sum_{i=1}^{n} (y_i - (\beta_0 + \beta_1 x_i))^2" />
+                {". "}
+                The{" "}
+                <span style={{ color: Theme.colors.secondary }}>
+                  other line
+                </span>
+                , initially random, is adjusted using gradient descent to
+                minimize the mean squared error between predicted and actual
+                values.{" "}
+                <span style={{ fontStyle: "italic" }}>
+                  You can manually adjust its parameters in the next step.
+                </span>
+              </>
+            }
+            maxWidth={400}
+          >
             <div>
               <FormControl>
                 <FormLabel id="training-size-radio-buttons-group-label">
@@ -192,7 +234,22 @@ function Homepage() {
             />
           </InfoCard>
         </div>
-        <InfoCard title="2. Title." description="Desc" maxWidth={400}>
+        <InfoCard
+          title="2. Set Initial Parameters and Explore the Cost Landscape"
+          description={
+            <>
+              This chart represents the cost landscape (slope vs intercept). It
+              shows the trajectory of parameter adjustments made through
+              gradient descent.{" "}
+              <span style={{ fontWeight: "bold" }}>
+                You can adjust the initial parameters by dragging{" "}
+                <span style={{ color: Theme.colors.secondary }}>the dot</span>{" "}
+                on the chart.
+              </span>
+            </>
+          }
+          maxWidth={400}
+        >
           <div className="cost-landscape-chart">
             <CostFunctionLandscapeChart
               width={350}
@@ -204,7 +261,25 @@ function Homepage() {
             />
           </div>
         </InfoCard>
-        <InfoCard title="3. Title" description="Desc" maxWidth={400}>
+        <InfoCard
+          title="3. Adjust Gradient Descent Parameters and Start the Algorithm"
+          description={
+            <>
+              <span style={{ fontWeight: "bold" }}>
+                Adjust the batch size and learning rate for the gradient descent
+                algorithm.
+              </span>
+              The following chart shows the loss for each iteration. It uses the
+              MSE cost function:
+              <br />
+              <br />
+              <div className="center">
+                <InlineMath math="J(\theta) = \frac{1}{2m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})^2" />
+              </div>
+            </>
+          }
+          maxWidth={400}
+        >
           <div className="loss-card-content">
             <div className="batch-size-slider">
               <Slider
@@ -213,9 +288,9 @@ function Homepage() {
                 min={1}
                 max={3}
                 marks={[
-                  { value: 1, label: "Stochastic GD" },
-                  { value: 2, label: "Mini-batch GD" },
-                  { value: 3, label: "Batch GD" },
+                  { value: 1, label: `Stochastic (${STOCHASTIC})` },
+                  { value: 2, label: `Mini-batch (${MINI_BATCH})` },
+                  { value: 3, label: `Batch (${pointsData.length})` },
                 ]}
                 valueLabelDisplay="auto"
               />
@@ -243,4 +318,4 @@ function Homepage() {
   )
 }
 
-export default Homepage
+export default GradientDescentVisualizer

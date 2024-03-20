@@ -22,6 +22,11 @@ function LinearModelChart(props: any) {
     OLSpointsData,
   } = props
 
+  const PointsShape = (props: any) => {
+    const { cx, cy } = props
+    return <circle cx={cx} cy={cy} r={3} fill={Theme.colors.options} />
+  }
+
   const generateLinePoints = () => {
     const points: Point2D[] = []
     for (let i = minRange; i < maxRange; i++) {
@@ -53,7 +58,7 @@ function LinearModelChart(props: any) {
       <ComposedChart
         width={height}
         height={width}
-        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+        margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
       >
         <CartesianGrid />
         <XAxis
@@ -78,14 +83,14 @@ function LinearModelChart(props: any) {
             style: { textAnchor: "middle" },
             angle: -90,
             position: "left",
-            offset: 0,
+            offset: -15,
           }}
           tickFormatter={(tick) => Math.round(tick) + ""}
           domain={[minRange * 1.1, maxRange * 1.1]}
         />
         {/* <Tooltip cursor={{ strokeDasharray: "3 3" }} /> */}
         {/* <Legend /> */}
-        <Scatter name="points" data={pointsData} fill={Theme.colors.options} />
+        <Scatter name="points" data={pointsData} shape={PointsShape} />
         <Line
           type="monotone"
           dataKey="y"

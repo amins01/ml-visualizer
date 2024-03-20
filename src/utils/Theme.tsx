@@ -1,6 +1,6 @@
 class Theme {
   static colors = {
-    primary: "#50C878",
+    primary: "#008DDA",
     secondary: "#ff7300",
     options: "#375783",
   }

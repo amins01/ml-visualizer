@@ -6,7 +6,7 @@ import "./InfoCard.css"
 
 interface InfoCardProps {
   title: string
-  description: string
+  description: ReactNode
   maxWidth: number
   children: ReactNode
 }
@@ -19,7 +19,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
 }) => (
   <Card style={{ maxWidth: maxWidth }}>
     <CardContent className="card-content">
-      <Typography gutterBottom variant="h5" component="div">
+      <Typography gutterBottom variant="h6" component="div">
         {title}
       </Typography>
       <Typography variant="body2" color="text.secondary">

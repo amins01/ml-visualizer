@@ -1,8 +1,32 @@
+.gd-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.gd-subtitle {
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.gd-header-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gd-description {
+  display: flex;
+  max-width: 40rem;
+}
+
 .row-1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
@@ -35,6 +59,11 @@
 }
 
 .training-options {
+  display: flex;
+  justify-content: center;
+}
+
+.center {
   display: flex;
   justify-content: center;
 }

@@ -26,11 +26,32 @@ function LossChart(props: any) {
       <ComposedChart
         width={width}
         height={height}
-        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+        margin={{ top: 20, right: 20, bottom: 20, left: 10 }}
       >
         <CartesianGrid />
-        <XAxis type="number" dataKey="x" name="x" />
-        <YAxis type="number" dataKey="y" name="y" />
+        <XAxis
+          type="number"
+          dataKey="x"
+          name="x"
+          label={{
+            value: `Iteration`,
+            style: { textAnchor: "middle" },
+            position: "insideBottom",
+            offset: -15,
+          }}
+        />
+        <YAxis
+          type="number"
+          dataKey="y"
+          name="y"
+          label={{
+            value: `cost`,
+            style: { textAnchor: "middle" },
+            angle: -90,
+            position: "left",
+            offset: -18,
+          }}
+        />
         <Line
           type="monotone"
           dataKey="y"

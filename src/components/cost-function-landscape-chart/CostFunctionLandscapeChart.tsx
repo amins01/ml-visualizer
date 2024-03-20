@@ -124,29 +124,29 @@ function CostFunctionLandscapeChart(props: any) {
             id="Gradient"
             cx={(OLSPoint.x / width) * 100 + "%"}
             cy={(OLSPoint.y / height) * 100 + "%"}
-            r="50%"
+            r="70%"
             fx={(OLSPoint.x / width) * 100 + "%"}
             fy={(OLSPoint.y / height) * 100 + "%"}
           >
             <stop
               offset="0%"
-              style={{ stopColor: "#AF42AE", stopOpacity: 0.2 }}
+              style={{ stopColor: "#124076", stopOpacity: 0.3 }}
             />
             <stop
               offset="25%"
-              style={{ stopColor: "#BC69AA", stopOpacity: 0.4 }}
+              style={{ stopColor: "#124076", stopOpacity: 0.5 }}
             />
             <stop
               offset="50%"
-              style={{ stopColor: "#C585B3", stopOpacity: 0.6 }}
+              style={{ stopColor: "#124076", stopOpacity: 0.7 }}
             />
             <stop
               offset="75%"
-              style={{ stopColor: "#D0A3BF", stopOpacity: 0.8 }}
+              style={{ stopColor: "#124076", stopOpacity: 0.9 }}
             />
             <stop
               offset="100%"
-              style={{ stopColor: "#d58eba", stopOpacity: 0.9 }}
+              style={{ stopColor: "#124076", stopOpacity: 1 }}
             />
           </radialGradient>
         </defs>
@@ -219,7 +219,7 @@ function CostFunctionLandscapeChart(props: any) {
           strokeWidth={1}
           fill="none"
         />
-        <text x={width / 2} y={height - 10} textAnchor="middle">
+        <text x={width / 2} y={height - 10} textAnchor="middle" fill="white">
           intercept
         </text>
         <text
@@ -227,6 +227,7 @@ function CostFunctionLandscapeChart(props: any) {
           y={height / 2}
           textAnchor="middle"
           transform={`rotate(-90,10,${height / 2})`}
+          fill="white"
         >
           slope
         </text>
