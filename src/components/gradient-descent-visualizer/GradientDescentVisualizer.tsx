@@ -23,14 +23,15 @@ import CostFunctionLandscapeChart from "../cost-function-landscape-chart/CostFun
 import { CustomLine } from "../../interfaces/CustomLine"
 import InfoCard from "../info-card/InfoCard"
 import Theme from "../../utils/Theme"
+import { Typography } from "@mui/material"
+import { LearningRate } from "../../interfaces/LearningRate"
 
 function GradientDescentVisualizer() {
   const MIN_RANGE = -10
   const MAX_RANGE = 10
   const STOCHASTIC = 1
   const MINI_BATCH = 32
-  const [learningRate, setLearningRate] = useState<number>(0.001)
-  const [model, setModel] = useState(new LinearRegression(learningRate))
+  const [model, setModel] = useState(new LinearRegression())
   const [trainingSize, setTrainingSize] = useState<TrainingSize>(
     TrainingSize.LARGE
   )
@@ -46,6 +47,7 @@ function GradientDescentVisualizer() {
   )
   const [OLSLine, setOLSLine] = useState<CustomLine>()
   const [OLSPointsData, setOLSPointsData] = useState<Point2D[]>([])
+  const [learningRateMarkIndex, setLearningRateMarkIndex] = useState(1)
   const [batchSizeMarkIndex, setBatchSizeMarkIndex] = useState(3)
 
   const startTraining = () => {
@@ -53,6 +55,7 @@ function GradientDescentVisualizer() {
     model.train(
       pointsData,
       10000,
+      getLearningRateByMarkIndex(learningRateMarkIndex),
       getBatchSizeByMarkIndex(batchSizeMarkIndex),
       0
     )
@@ -76,7 +79,7 @@ function GradientDescentVisualizer() {
     )
   }
 
-  const handleSliderChange = (event: any, newValue: any) => {
+  const handleBatchSizeSliderChange = (event: any, newValue: any) => {
     const newBatchSize = getBatchSizeByMarkIndex(newValue)
 
     if (newBatchSize !== -1 && newValue !== batchSizeMarkIndex) {
@@ -85,10 +88,28 @@ function GradientDescentVisualizer() {
     }
   }
 
+  const handleLearningRateSliderChange = (event: any, newValue: any) => {
+    const newLearningRate = getLearningRateByMarkIndex(newValue)
+
+    if (newLearningRate !== -1 && newValue !== learningRateMarkIndex) {
+      resetTraining()
+      setLearningRateMarkIndex(newValue)
+      console.log("Learning rate", newLearningRate)
+    }
+  }
+
   const getBatchSizeByMarkIndex = (markIndex: number) => {
     if (markIndex === 1) return STOCHASTIC
     if (markIndex === 2) return MINI_BATCH
     if (markIndex === 3) return pointsData.length
+
+    return -1
+  }
+
+  const getLearningRateByMarkIndex = (markIndex: number) => {
+    if (markIndex === 1) return LearningRate.SMALL
+    if (markIndex === 2) return LearningRate.MEDIUM
+    if (markIndex === 3) return LearningRate.LARGE
 
     return -1
   }
@@ -139,8 +160,12 @@ function GradientDescentVisualizer() {
         <div className="gd-description">
           <p>
             The following is an interactive visualization of linear regression
-            using gradient descent. I saw this interactive animation while
-            navigating
+            using gradient descent.{" "}
+            <span style={{ fontWeight: "bold" }}>
+              It demonstrates the impact of different hyperparameters on the
+              gradient descent process.
+            </span>{" "}
+            I saw this interactive animation while navigating
             <span style={{ fontStyle: "italic" }}>{" deeplearning.ai "}</span>
             and decided to recreate it!
           </p>
@@ -281,10 +306,25 @@ function GradientDescentVisualizer() {
           maxWidth={400}
         >
           <div className="loss-card-content">
-            <div className="batch-size-slider">
+            <div className="gd-params-slider">
+              <Typography fontSize={15}>Learning rate (α)</Typography>
+              <Slider
+                value={learningRateMarkIndex}
+                onChange={handleLearningRateSliderChange}
+                min={1}
+                max={3}
+                marks={[
+                  { value: 1, label: `Small` },
+                  { value: 2, label: `Medium` },
+                  { value: 3, label: `Large` },
+                ]}
+                valueLabelDisplay="off"
+              />
+              <br />
+              <Typography>Batch size</Typography>
               <Slider
                 value={batchSizeMarkIndex}
-                onChange={handleSliderChange}
+                onChange={handleBatchSizeSliderChange}
                 min={1}
                 max={3}
                 marks={[
@@ -292,7 +332,7 @@ function GradientDescentVisualizer() {
                   { value: 2, label: `Mini-batch (${MINI_BATCH})` },
                   { value: 3, label: `Batch (${pointsData.length})` },
                 ]}
-                valueLabelDisplay="auto"
+                valueLabelDisplay="off"
               />
             </div>
             <div className="training-options">

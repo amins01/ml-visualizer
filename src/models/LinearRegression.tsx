@@ -11,10 +11,9 @@ export class LinearRegression {
   currentLoss: number
   currentEpoch: number
   currentStep: number
-  learningRate: number
   stopTraining: boolean
 
-  constructor(learningRate: number) {
+  constructor() {
     this.updateCallbacks = []
     this.resetCallbacks = []
     this.slope = Math.random()
@@ -24,7 +23,6 @@ export class LinearRegression {
     this.currentLoss = 0
     this.currentEpoch = 0
     this.currentStep = 0
-    this.learningRate = learningRate
     this.stopTraining = false
   }
 
@@ -47,6 +45,7 @@ export class LinearRegression {
   async train(
     points: Point2D[],
     epochs: number,
+    learningRate: number,
     batchSize: number,
     delay: number
   ) {
@@ -76,8 +75,8 @@ export class LinearRegression {
           delta_intercept += -2 * error
         }
 
-        this.slope -= (this.learningRate * delta_slope) / batch.length
-        this.intercept -= (this.learningRate * delta_intercept) / batch.length
+        this.slope -= (learningRate * delta_slope) / batch.length
+        this.intercept -= (learningRate * delta_intercept) / batch.length
 
         this.currentLoss =
           batch.reduce((sum, point) => {
