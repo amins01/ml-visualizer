@@ -18,6 +18,7 @@
     "@types/react-dom": "^18.2.19",
     "@visx/visx": "^3.8.0",
     "date-fns": "^3.3.1",
+    "gh-pages": "^6.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-katex": "^3.0.1",
@@ -59,7 +60,6 @@
   "devDependencies": {
     "@types/react-katex": "^3.0.4",
     "@types/react-latex": "^2.0.3",
-    "@types/three": "^0.162.0",
-    "gh-pages": "^6.1.1"
+    "@types/three": "^0.162.0"
   }
 }
