@@ -118,7 +118,7 @@ function CostFunctionLandscapeChart(props: any) {
 
   return (
     <div>
-      <svg width={width} height={height}>
+      <svg width={width} height={height} style={{ touchAction: "none" }}>
         <defs>
           <radialGradient
             id="Gradient"

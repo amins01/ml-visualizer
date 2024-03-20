@@ -36,10 +36,7 @@ function App() {
             path="/knn"
             element={<ComingSoonPage title="K-Nearest Neighbors Visualizer" />}
           />
-          {/* <Route index element={<GradientDescentVisualizer />} /> */}
-          {/* <Route path="blogs" element={<Blogs />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="*" element={<NoPage />} /> */}
+          <Route path="*" element={<GradientDescentVisualizer />} />
         </Routes>
       </ThemeProvider>
     </div>
