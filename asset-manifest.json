@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ml-visualizer/static/css/main.f4d9076c.css",
-    "main.js": "/ml-visualizer/static/js/main.4d56bea6.js",
+    "main.js": "/ml-visualizer/static/js/main.f41b39ad.js",
     "static/js/453.0a175c64.chunk.js": "/ml-visualizer/static/js/453.0a175c64.chunk.js",
     "static/media/loading.gif": "/ml-visualizer/static/media/loading.dd82df7687c90604f993.gif",
     "static/media/KaTeX_AMS-Regular.ttf": "/ml-visualizer/static/media/KaTeX_AMS-Regular.f80d9eaff7bad6dad739.ttf",
@@ -66,11 +66,11 @@
     "static/media/KaTeX_Size3-Regular.woff2": "/ml-visualizer/static/media/KaTeX_Size3-Regular.1ef7adae735724bab211.woff2",
     "index.html": "/ml-visualizer/index.html",
     "main.f4d9076c.css.map": "/ml-visualizer/static/css/main.f4d9076c.css.map",
-    "main.4d56bea6.js.map": "/ml-visualizer/static/js/main.4d56bea6.js.map",
+    "main.f41b39ad.js.map": "/ml-visualizer/static/js/main.f41b39ad.js.map",
     "453.0a175c64.chunk.js.map": "/ml-visualizer/static/js/453.0a175c64.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f4d9076c.css",
-    "static/js/main.4d56bea6.js"
+    "static/js/main.f41b39ad.js"
   ]
 }
