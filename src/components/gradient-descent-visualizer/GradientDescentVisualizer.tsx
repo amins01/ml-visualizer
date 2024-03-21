@@ -321,7 +321,7 @@ function GradientDescentVisualizer() {
                 valueLabelDisplay="off"
               />
               <br />
-              <Typography>Batch size</Typography>
+              <Typography fontSize={15}>Batch size</Typography>
               <Slider
                 value={batchSizeMarkIndex}
                 onChange={handleBatchSizeSliderChange}
