@@ -21,6 +21,7 @@
 .gd-description {
   display: flex;
   max-width: 40rem;
+  margin-top: 1rem;
 }
 
 .row-1 {

@@ -49,7 +49,7 @@ export class LinearRegression {
     batchSize: number,
     delay: number
   ) {
-    console.log(`Starting Training for ${epochs} epochs...`)
+    //console.log(`Starting Training for ${epochs} epochs...`)
     this.slope = this.initialSlope
     this.intercept = this.initialIntercept
     this.currentLoss = 0
@@ -91,7 +91,7 @@ export class LinearRegression {
         await HelperUtils.sleep(delay)
       }
 
-      console.log(`Loss epoch ${this.currentEpoch}`, this.currentLoss)
+      //console.log(`Loss epoch ${this.currentEpoch}`, this.currentLoss)
     }
     this.currentEpoch = 0
     this.currentStep = 0

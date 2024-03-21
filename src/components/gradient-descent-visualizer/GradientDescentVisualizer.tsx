@@ -47,7 +47,7 @@ function GradientDescentVisualizer() {
   )
   const [OLSLine, setOLSLine] = useState<CustomLine>()
   const [OLSPointsData, setOLSPointsData] = useState<Point2D[]>([])
-  const [learningRateMarkIndex, setLearningRateMarkIndex] = useState(1)
+  const [learningRateMarkIndex, setLearningRateMarkIndex] = useState(2)
   const [batchSizeMarkIndex, setBatchSizeMarkIndex] = useState(3)
 
   const startTraining = () => {
@@ -158,23 +158,23 @@ function GradientDescentVisualizer() {
           <InlineMath math="\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta)" />
         </div>
         <div className="gd-description">
-          <p>
+          <div>
             The following is an interactive visualization of linear regression
             using gradient descent.{" "}
             <span style={{ fontWeight: "bold" }}>
               It demonstrates the impact of different hyperparameters on the
               gradient descent process.
             </span>{" "}
-            I saw this interactive animation while navigating
+            I saw a similar animation while navigating
             <span style={{ fontStyle: "italic" }}>{" deeplearning.ai "}</span>
             and decided to recreate it!
-          </p>
+          </div>
         </div>
       </div>
       <div className="row-1">
         <div className="linear-reg-chart">
           <InfoCard
-            title="1. Generate a dataset"
+            title="1. Select Training Size and Generate Dataset"
             description={
               <>
                 First, select the training size and generate a random dataset.
