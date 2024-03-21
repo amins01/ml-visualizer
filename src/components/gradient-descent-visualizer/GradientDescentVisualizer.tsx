@@ -94,7 +94,7 @@ function GradientDescentVisualizer() {
     if (newLearningRate !== -1 && newValue !== learningRateMarkIndex) {
       resetTraining()
       setLearningRateMarkIndex(newValue)
-      console.log("Learning rate", newLearningRate)
+      // console.log("Learning rate", newLearningRate)
     }
   }
 
